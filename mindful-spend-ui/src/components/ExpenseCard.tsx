@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export interface Expense {
-  id: number;           // returned from backend
+  id: number;
   user_id: number;
   amount: number;
   category: string;

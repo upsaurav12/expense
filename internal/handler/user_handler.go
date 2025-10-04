@@ -2,6 +2,8 @@ package handler
 
 import (
 	"expense_tracker/internal/db"
+	"fmt"
+	"math/rand"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -46,10 +48,13 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	query := "INSERT INTO users (name, email) values ($1,$2) RETURNING id"
+	fmt.Println("newUser received:", newUser)
 
+	newUser.ID = rand.Intn(1000000)
+	query := "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id"
 	err := db.DB.QueryRow(query, newUser.Name, newUser.Email).Scan(&newUser.ID)
 	if err != nil {
+		fmt.Println("error: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
