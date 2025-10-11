@@ -18,4 +18,11 @@ func RegisterRoutes(r *gin.Engine) {
 		v2.GET("/expenses", handler.GetExpenses)
 		v2.POST("/expenses", handler.CreateExpense)
 	}
+
+	v3 := r.Group("api/v1")
+	{
+		v3.GET("/groups", handler.GetGroups)
+		v3.POST("/groups", handler.CreateGroup)
+	}
+
 }

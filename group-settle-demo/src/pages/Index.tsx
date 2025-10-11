@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { Axis3DIcon, Plus } from "lucide-react";
 import GroupList from "@/components/GroupList";
 // import { mockGroups } from "./Group";
 import {
@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import axios from 'axios'
 
 export type Expense = {
   id: string;
@@ -27,9 +28,10 @@ export type Expense = {
 export type  Group =  {
   id: string;
   name: string;
+  description: string;
   members: string[];
-  totalExpenses: number;
-  expenses: Expense[];
+  initial_expense: number;
+  expenses: number[];
 }
 
   export const getGroups = () => {
@@ -52,7 +54,7 @@ const saveGroups = (updatedGroups: Group[]) => {
   const [groupAmount, setGroupAmount] = useState("");
   const [membersInput, setMembersInput] = useState("");
 
-const handleCreateGroup = (e: React.FormEvent) => {
+const handleCreateGroup = async (e: React.FormEvent) => {
   e.preventDefault();
 
   if (!groupName.trim()) {
@@ -74,11 +76,18 @@ const handleCreateGroup = (e: React.FormEvent) => {
   const newGroup: Group = {
     id: groupId,
     name: groupName,
+    description: "default_description",
     members,
-    totalExpenses: Number(groupAmount) || 0,
+    initial_expense: Number(groupAmount) || 0,
     expenses: [],
   };
 
+  try {
+      const res = await axios.post(import.meta.env.BACKEND_URL_FOR_GROUP, newGroup)
+      console.log("success: ", res)
+  } catch (error) {
+    console.error("error", error)
+  }
   const updatedGroups = [...groups, newGroup];
   setGroups(updatedGroups);
   saveGroups(updatedGroups);

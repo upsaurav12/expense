@@ -6,7 +6,7 @@ interface Group {
   id: string;
   name: string;
   members: string[];
-  totalExpenses: number;
+  initial_expense: number;
 }
 
 interface GroupListProps {
@@ -31,7 +31,7 @@ const GroupList = ({ groups }: GroupListProps) => {
                   </p>
                   <div className="text-sm">
                     <span className="text-muted-foreground">Total: </span>
-                    <span className="font-semibold text-primary">₹{group.totalExpenses.toLocaleString()}</span>
+                    <span className="font-semibold text-primary">₹{group.initial_expense.toLocaleString()}</span>
                   </div>
                 </div>
                 <ChevronRight className="h-5 w-5 text-muted-foreground" />
