@@ -2,6 +2,7 @@ package handler
 
 import (
 	"expense_tracker/internal/db"
+	"expense_tracker/internal/utils"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -9,13 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type User struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
+// type User struct {
+// 	ID    int    `json:"id"`
+// 	Name  string `json:"name"`
+// 	Email string `json:"email"`
+// }
 
-var users = []User{
+var users = []utils.User{
 	{ID: 1, Name: "Alice", Email: "abc@example.com"},
 	{ID: 2, Name: "Bob", Email: "abc1@example.com"},
 }
@@ -28,9 +29,9 @@ func GetUsers(c *gin.Context) {
 	}
 	defer rows.Close()
 
-	var users []User
+	var users []utils.User
 	for rows.Next() {
-		var user User
+		var user utils.User
 		if err := rows.Scan(&user.ID, &user.Name, &user.Email); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -42,7 +43,7 @@ func GetUsers(c *gin.Context) {
 }
 
 func CreateUser(c *gin.Context) {
-	var newUser User
+	var newUser utils.User
 	if err := c.BindJSON(&newUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

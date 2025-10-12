@@ -31,7 +31,7 @@ export type  Group =  {
   description: string;
   members: string[];
   initial_expense: number;
-  expenses: number[];
+  expenses: Expense[];
 }
 
   export const getGroups = () => {

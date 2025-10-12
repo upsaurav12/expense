@@ -9,7 +9,8 @@ import (
 )
 
 type Group struct {
-	ID             string
+	ID             string   `json:"id"`
+	UserID         string   `json:"user_id"`
 	Name           string   `json:"name"`
 	Description    string   `json:"description"`
 	Members        []string `json:"members"`
@@ -64,6 +65,7 @@ func GetGroups(c *gin.Context) {
 }
 
 func CreateGroup(c *gin.Context) {
+	userId := c.GetInt("user_id")
 	var group Group
 	if err := c.BindJSON(&group); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -83,12 +85,13 @@ func CreateGroup(c *gin.Context) {
 	}
 
 	query := `
-		INSERT INTO groups (name,description, members, initial_expense, expenses)
+		INSERT INTO groups (user_id,name,description, members, initial_expense, expenses)
 		VALUES ($1, $2,$3::jsonb, $4, $5::jsonb)
-		RETURNING id, name, description, members, initial_expense, expenses
+		RETURNING id,user_id, name, description, members, initial_expense, expenses
 	`
 
 	rows := db.DB.QueryRow(query,
+		userId,
 		group.Name,
 		group.Description,
 		string(membersJSON),
@@ -101,6 +104,7 @@ func CreateGroup(c *gin.Context) {
 
 	err = rows.Scan(
 		&group.ID,
+		&group.UserID,
 		&group.Name,
 		&group.Description,
 		&membersData,
